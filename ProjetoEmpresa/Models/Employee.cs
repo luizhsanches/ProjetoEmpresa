@@ -78,11 +78,5 @@ namespace ProjetoEmpresa.Models
             Department = emp.Department;
             Address = emp.Address;
         }
-
-        /*public Employee(string employeeName, Enum department)
-        {
-            this.EmployeeName = employeeName;
-            this.department = department;
-        }*/
     }
 }
