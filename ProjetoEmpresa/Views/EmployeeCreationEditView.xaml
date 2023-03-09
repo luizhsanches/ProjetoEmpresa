@@ -1,0 +1,30 @@
+﻿<Window x:Class="ProjetoEmpresa.Views.EmployeeCreationEditView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjetoEmpresa.Views"
+        xmlns:local1="clr-namespace:ProjetoEmpresa.Models"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="EmployeeCreationEditView" Height="400" Width="450
+        ">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="EnumDataSource" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local1:DepartmentEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+   
+    <Grid>
+        <Label Content="Nome do Funcionario" HorizontalAlignment="Left" Margin="49,40,0,0" VerticalAlignment="Top" Width="137" Height="28" FontWeight="Bold"/>
+        <TextBox HorizontalAlignment="Center" Margin="0,72,0,0" TextWrapping="Wrap" Text="{Binding EmployeeName}" VerticalAlignment="Top" Width="352" Height="20"/>
+        <Label Content="Departamento do Funcionario" HorizontalAlignment="Left" Margin="49,112,0,0" VerticalAlignment="Top" Width="242" Height="28" FontWeight="Bold"/>
+        <ComboBox Name="cbDepartamento" ItemsSource="{Binding Source={StaticResource EnumDataSource}}" SelectedValue="{Binding Department}" HorizontalAlignment="Center" Margin="0,140,0,0" VerticalAlignment="Top" Width="351"/>
+        <Label Content="Endereço" HorizontalAlignment="Left" Margin="50,185,0,0" VerticalAlignment="Top" Width="138" Height="28" FontWeight="Bold"/>
+        <TextBox HorizontalAlignment="Center" Margin="0,217,0,0" TextWrapping="Wrap" Text="{Binding Address}" VerticalAlignment="Top" Width="351" Height="20"/>
+        <Button Content="Salvar" HorizontalAlignment="Center" Margin="0,296,0,0" VerticalAlignment="Top" Width="74" Click="btnSave"/>
+
+    </Grid>
+</Window>
