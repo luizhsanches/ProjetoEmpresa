@@ -11,6 +11,13 @@ namespace ProjetoEmpresa.Models
 {
     public class Employee : BaseNotifier
     {
+        private int _id;
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
         private string _name;
         public string EmployeeName 
         {
@@ -24,8 +31,8 @@ namespace ProjetoEmpresa.Models
             }
         }
 
-        private DepartmentEnum _department;
-        public DepartmentEnum Department
+        private string _department;
+        public string Department
         {
             get { return _department; }
             set
@@ -60,8 +67,16 @@ namespace ProjetoEmpresa.Models
             Address = address;
         }
 
-        public Employee(string employeeName, DepartmentEnum department, string address)
+        public Employee(string employeeName, string department, string address)
         {
+            EmployeeName = employeeName;
+            Department = department;
+            Address = address;
+        }
+
+        public Employee(int id, string employeeName, string department, string address)
+        {
+            Id = id;
             EmployeeName = employeeName;
             Department = department;
             Address = address;

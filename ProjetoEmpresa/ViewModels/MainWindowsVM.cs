@@ -1,4 +1,5 @@
 ﻿using ProjetoEmpresa.Models;
+using ProjetoEmpresa.Models.Repositories;
 using ProjetoEmpresa.ViewModels.VMUtils;
 using ProjetoEmpresa.Views;
 using System;
@@ -17,6 +18,7 @@ namespace ProjetoEmpresa.ViewModels
 {
     public class MainWindowsVM : BaseNotifier
     {
+        private PostgresDB postgresDB { get; set; }
         private ObservableCollection<Employee> _employeeList;
         private string _selectedFilter;        
 
@@ -30,7 +32,7 @@ namespace ProjetoEmpresa.ViewModels
                 }
                 else
                 {
-                    return _employeeList.Where(employee => employee.Department.ToString() == SelectedFilter);
+                    return _employeeList.Where(employee => employee.Department == SelectedFilter);
                 }
             }
         }
@@ -57,16 +59,22 @@ namespace ProjetoEmpresa.ViewModels
                 _selectedFilter = value;
                 OnPropertyChanged(nameof(EmployeeList));
             }
-        }
-
-        
+        }        
 
         public ICommand Add { get; private set; }
         public ICommand Edit { get; private set; }
         public ICommand Remove { get; private set; }
 
         public MainWindowsVM() {
-            _employeeList = new ObservableCollection<Employee>();
+            postgresDB = new PostgresDB();
+            try
+            {
+                _employeeList = postgresDB.GetEmployees();
+            }
+            catch (Exception)
+            {
+                _employeeList = new ObservableCollection<Employee>();
+            }
 
             InitializeCommands();
         }
@@ -75,17 +83,26 @@ namespace ProjetoEmpresa.ViewModels
         {
             Add = new RelayCommand((object _) =>
             {
-                Employee employee = new Employee ();
+                Employee newEmployee = new Employee ();
 
                 EmployeeCreationEditView screen = new EmployeeCreationEditView();
-                screen.DataContext = employee;
+                screen.DataContext = newEmployee;
                 bool? verifica = screen.ShowDialog();
 
                 if (verifica.HasValue && verifica.Value)
                 {
-                    _employeeList.Add(employee);
-                    OnPropertyChanged(nameof (EmployeeList));
-                    selectedEmployee = employee;
+                    if (postgresDB.InsertEmployee(newEmployee) == 1) {
+                        _employeeList.Add(newEmployee);
+                        _employeeList = postgresDB.GetEmployees();
+                        SelectedFilter = newEmployee.Department;
+                        OnPropertyChanged(nameof(SelectedFilter));
+                        OnPropertyChanged(nameof(EmployeeList));
+                        selectedEmployee = newEmployee;
+                    } 
+                    else
+                    {
+                        Console.WriteLine("ERRO!");
+                    }                    
                 }
             });
 
@@ -99,8 +116,16 @@ namespace ProjetoEmpresa.ViewModels
 
                 if (verifica.HasValue && verifica.Value)
                 {
-                    selectedEmployee.CopyEmployee(employeeToUpdate);
-                    OnPropertyChanged(nameof(EmployeeList));
+                    if (postgresDB.UpdateEmployee(employeeToUpdate) == 1)
+                    {
+                        selectedEmployee.CopyEmployee(employeeToUpdate);
+                        _employeeList = postgresDB.GetEmployees();
+                        OnPropertyChanged(nameof(EmployeeList));
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERRO!");
+                    }
                 }
             }, (object _) =>
             {
@@ -108,9 +133,14 @@ namespace ProjetoEmpresa.ViewModels
             });
 
             Remove = new RelayCommand((object _) => {
-                _employeeList.Remove(selectedEmployee);
-                OnPropertyChanged(nameof(EmployeeList));
-                selectedEmployee = _employeeList.FirstOrDefault();
+
+                if(postgresDB.DeleteEmployee(selectedEmployee.Id) == 1)
+                {
+                    _employeeList.Remove(selectedEmployee);
+                    _employeeList = postgresDB.GetEmployees();
+                    OnPropertyChanged(nameof(EmployeeList));
+                    selectedEmployee = _employeeList.FirstOrDefault();
+                }
 
             }, (object _) =>
             {
