@@ -19,7 +19,7 @@ namespace ProjetoEmpresa.ViewModels
 {
     public class MainWindowsVM : BaseNotifier
     {
-        private PostgresDB postgresDB { get; set; }
+        private PostgresDB postgresDB;
         private ObservableCollection<Employee> _employeeList;
         private string _selectedFilter;        
 
