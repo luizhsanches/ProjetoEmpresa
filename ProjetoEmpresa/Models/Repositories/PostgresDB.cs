@@ -99,8 +99,7 @@ namespace ProjetoEmpresa.Models.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return -1;
+                throw new Exception("Falha ao atualizar funcionario");
             }
             finally { conn.Close(); }
         }
@@ -120,8 +119,7 @@ namespace ProjetoEmpresa.Models.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return -1;
+                throw new Exception("Falha ao remover funcionario");
             }
             finally { conn.Close(); }
         }
