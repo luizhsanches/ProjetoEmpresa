@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -67,13 +68,14 @@ namespace ProjetoEmpresa.ViewModels
 
         public MainWindowsVM() {
             postgresDB = new PostgresDB();
+
             try
             {
                 _employeeList = postgresDB.GetEmployees();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _employeeList = new ObservableCollection<Employee>();
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             InitializeCommands();
@@ -91,18 +93,23 @@ namespace ProjetoEmpresa.ViewModels
 
                 if (verifica.HasValue && verifica.Value)
                 {
-                    if (postgresDB.InsertEmployee(newEmployee) == 1) {
+                    try
+                    {
+                        postgresDB.InsertEmployee(newEmployee);
+
                         _employeeList.Add(newEmployee);
                         _employeeList = postgresDB.GetEmployees();
                         SelectedFilter = newEmployee.Department;
+
                         OnPropertyChanged(nameof(SelectedFilter));
                         OnPropertyChanged(nameof(EmployeeList));
+
                         selectedEmployee = newEmployee;
-                    } 
-                    else
+                    }
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("ERRO!");
-                    }                    
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }                  
                 }
             });
 
@@ -116,15 +123,16 @@ namespace ProjetoEmpresa.ViewModels
 
                 if (verifica.HasValue && verifica.Value)
                 {
-                    if (postgresDB.UpdateEmployee(employeeToUpdate) == 1)
+                    try
                     {
+                        postgresDB.UpdateEmployee(employeeToUpdate);
                         selectedEmployee.CopyEmployee(employeeToUpdate);
                         _employeeList = postgresDB.GetEmployees();
                         OnPropertyChanged(nameof(EmployeeList));
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("ERRO!");
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }, (object _) =>
@@ -134,14 +142,20 @@ namespace ProjetoEmpresa.ViewModels
 
             Remove = new RelayCommand((object _) => {
 
-                if(postgresDB.DeleteEmployee(selectedEmployee.Id) == 1)
+                try
                 {
+                    postgresDB.DeleteEmployee(selectedEmployee.Id);
+
                     _employeeList.Remove(selectedEmployee);
                     _employeeList = postgresDB.GetEmployees();
+
                     OnPropertyChanged(nameof(EmployeeList));
                     selectedEmployee = _employeeList.FirstOrDefault();
                 }
-
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }, (object _) =>
             {
                 return selectedEmployee != null;

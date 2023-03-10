@@ -52,14 +52,18 @@ namespace ProjetoEmpresa.Models.Repositories
 
                 return employees;
             }
+            catch (NpgsqlException)
+            {
+                throw new Exception("An error occurred while accessing the database.");
+            }
             catch (Exception ex) 
             {
-                throw new Exception("Falha ao carregar funcionarios");
+                throw new Exception("Falha ao carregar funcionarios: " + ex.Message);
             }
             finally { conn.Close(); }            
         }
 
-        public int InsertEmployee(Employee newEmployee)
+        public void InsertEmployee(Employee newEmployee)
         {
             try
             {
@@ -72,16 +76,24 @@ namespace ProjetoEmpresa.Models.Repositories
                 insertCommand.Parameters.AddWithValue("@department", newEmployee.Department);
                 insertCommand.Parameters.AddWithValue("@address", newEmployee.Address);
 
-                return insertCommand.ExecuteNonQuery();
+                insertCommand.ExecuteNonQuery();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new Exception("Dados invalidos.");
+            }
+            catch (NpgsqlException)
+            {
+                throw new Exception("Ocorreu um erro ao acessar o banco de dados.");
             }
             catch (Exception ex)
             {
-                throw new Exception("Falha ao inserir funcionario");
+                throw new Exception("Falha ao inserir funcionario: " + ex.Message);
             }
             finally { conn.Close(); }
         }
 
-        public int UpdateEmployee(Employee employeeToUpdate)
+        public void UpdateEmployee(Employee employeeToUpdate)
         {
             try
             {
@@ -95,16 +107,24 @@ namespace ProjetoEmpresa.Models.Repositories
                 updateCommand.Parameters.AddWithValue("@address", employeeToUpdate.Address);
                 updateCommand.Parameters.AddWithValue("@id", employeeToUpdate.Id);
 
-                return updateCommand.ExecuteNonQuery();
+                updateCommand.ExecuteNonQuery();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new Exception("Dados invalidos.");
+            }
+            catch (NpgsqlException)
+            {
+                throw new Exception("Ocorreu um erro ao acessar o banco de dados.");
             }
             catch (Exception ex)
             {
-                throw new Exception("Falha ao atualizar funcionario");
+                throw new Exception("Falha ao atualizar funcionario: " + ex.Message);
             }
             finally { conn.Close(); }
         }
 
-        public int DeleteEmployee(int employeeId)
+        public void DeleteEmployee(int employeeId)
         {
             try
             {
@@ -115,11 +135,15 @@ namespace ProjetoEmpresa.Models.Repositories
 
                 deleteCommand.Parameters.AddWithValue("id", employeeId);
 
-                return deleteCommand.ExecuteNonQuery();
+                deleteCommand.ExecuteNonQuery();
+            }
+            catch (NpgsqlException)
+            {
+                throw new Exception("Ocorreu um erro ao acessar o banco de dados.");
             }
             catch (Exception ex)
             {
-                throw new Exception("Falha ao remover funcionario");
+                throw new Exception("Falha ao remover funcionario: " + ex.Message);
             }
             finally { conn.Close(); }
         }
