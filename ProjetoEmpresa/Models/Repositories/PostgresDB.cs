@@ -54,7 +54,7 @@ namespace ProjetoEmpresa.Models.Repositories
             }
             catch (NpgsqlException)
             {
-                throw new Exception("An error occurred while accessing the database.");
+                throw new Exception("Ocorreu um erro ao acessar o banco de dados.");
             }
             catch (Exception ex) 
             {
