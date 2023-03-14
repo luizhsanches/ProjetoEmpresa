@@ -1,4 +1,5 @@
-﻿using ProjetoEmpresa.ViewModels;
+﻿using ProjetoEmpresa.Models.Repositories;
+using ProjetoEmpresa.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace ProjetoEmpresa
     {
         public MainWindow()
         {
-            InitializeComponent();
             DataContext = new MainWindowsVM();
+            InitializeComponent();
         }
     }
 }

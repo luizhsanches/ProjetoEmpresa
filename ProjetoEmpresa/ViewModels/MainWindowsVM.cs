@@ -19,7 +19,7 @@ namespace ProjetoEmpresa.ViewModels
 {
     public class MainWindowsVM : BaseNotifier
     {
-        private PostgresDB postgresDB;
+        private readonly IDatabase database;
         private ObservableCollection<Employee> _employeeList;
         private string _selectedFilter;        
 
@@ -67,11 +67,11 @@ namespace ProjetoEmpresa.ViewModels
         public ICommand Remove { get; private set; }
 
         public MainWindowsVM() {
-            postgresDB = new PostgresDB();
+            database = new PostgresDB();
 
             try
             {
-                _employeeList = postgresDB.GetEmployees();
+                _employeeList = database.GetEmployees();
             }
             catch (Exception ex)
             {
@@ -95,10 +95,10 @@ namespace ProjetoEmpresa.ViewModels
                 {
                     try
                     {
-                        postgresDB.InsertEmployee(newEmployee);
+                        database.InsertEmployee(newEmployee);
 
                         _employeeList.Add(newEmployee);
-                        _employeeList = postgresDB.GetEmployees();
+                        _employeeList = database.GetEmployees();
                         SelectedFilter = newEmployee.Department;
 
                         OnPropertyChanged(nameof(SelectedFilter));
@@ -125,9 +125,9 @@ namespace ProjetoEmpresa.ViewModels
                 {
                     try
                     {
-                        postgresDB.UpdateEmployee(employeeToUpdate);
+                        database.UpdateEmployee(employeeToUpdate);
                         selectedEmployee.CopyEmployee(employeeToUpdate);
-                        _employeeList = postgresDB.GetEmployees();
+                        _employeeList = database.GetEmployees();
                         OnPropertyChanged(nameof(EmployeeList));
                     }
                     catch (Exception ex)
@@ -144,10 +144,10 @@ namespace ProjetoEmpresa.ViewModels
 
                 try
                 {
-                    postgresDB.DeleteEmployee(selectedEmployee.Id);
+                    database.DeleteEmployee(selectedEmployee.Id);
 
                     _employeeList.Remove(selectedEmployee);
-                    _employeeList = postgresDB.GetEmployees();
+                    _employeeList = database.GetEmployees();
 
                     OnPropertyChanged(nameof(EmployeeList));
                     selectedEmployee = _employeeList.FirstOrDefault();
