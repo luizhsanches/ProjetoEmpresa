@@ -20,6 +20,7 @@ namespace ProjetoEmpresa.ViewModels
     public class MainWindowsVM : BaseNotifier
     {
         private readonly IDatabase database;
+        private readonly IEmployeeValidator employeeValidator;
         private ObservableCollection<Employee> _employeeList;
         private string _selectedFilter;        
 
@@ -33,7 +34,7 @@ namespace ProjetoEmpresa.ViewModels
                 }
                 else
                 {
-                    return _employeeList.Where(employee => employee.Department == SelectedFilter);
+                    return _employeeList.Where(employee => employee.Department.ToString() == SelectedFilter);
                 }
             }
         }
@@ -72,6 +73,7 @@ namespace ProjetoEmpresa.ViewModels
             try
             {
                 _employeeList = database.GetEmployees();
+                employeeValidator = new EmployeeValidator();
             }
             catch (Exception ex)
             {
@@ -95,11 +97,12 @@ namespace ProjetoEmpresa.ViewModels
                 {
                     try
                     {
+                        employeeValidator.Validate(newEmployee);
                         database.InsertEmployee(newEmployee);
 
                         _employeeList.Add(newEmployee);
                         _employeeList = database.GetEmployees();
-                        SelectedFilter = newEmployee.Department;
+                        SelectedFilter = newEmployee.Department.ToString();
 
                         OnPropertyChanged(nameof(SelectedFilter));
                         OnPropertyChanged(nameof(EmployeeList));
@@ -115,19 +118,21 @@ namespace ProjetoEmpresa.ViewModels
 
             Edit = new RelayCommand((object _) =>
             {
-                EmployeeCreationEditView screen = new EmployeeCreationEditView();
-
                 Employee employeeToUpdate = selectedEmployee.Clone();
-                screen.DataContext = employeeToUpdate;
+                EmployeeCreationEditView screen = new EmployeeCreationEditView() { DataContext = employeeToUpdate };
+                
                 bool? verifica = screen.ShowDialog();
 
                 if (verifica.HasValue && verifica.Value)
                 {
                     try
                     {
+                        employeeValidator.Validate(employeeToUpdate);
                         database.UpdateEmployee(employeeToUpdate);
+
                         selectedEmployee.CopyEmployee(employeeToUpdate);
                         _employeeList = database.GetEmployees();
+
                         OnPropertyChanged(nameof(EmployeeList));
                     }
                     catch (Exception ex)

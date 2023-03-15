@@ -8,7 +8,7 @@ namespace ProjetoEmpresa.Models
 {
     public enum DepartmentEnum
     {
-        RH = 0,
+        RH,
         Tecnologia,
         Financeiro,
         Almoxarifado,

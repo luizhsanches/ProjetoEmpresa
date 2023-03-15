@@ -36,10 +36,11 @@ namespace ProjetoEmpresa.Models.Repositories
 
                         while (reader.Read())
                         {
+                            _ = Enum.TryParse(reader.GetString(2), out DepartmentEnum department);
                             Employee emp = new Employee(
                                 (int)reader["id"],
                                 (string)reader["employee_name"],
-                                (string)reader["department"],
+                                department,
                                 (string)reader["address"]
                             );
 
@@ -75,7 +76,7 @@ namespace ProjetoEmpresa.Models.Repositories
                         insertCommand.CommandText = "INSERT INTO employee (employee_name, department, address) VALUES (@employee_name, @department, @address)";
                         
                         insertCommand.Parameters.AddWithValue("@employee_name", newEmployee.EmployeeName);
-                        insertCommand.Parameters.AddWithValue("@department", newEmployee.Department);
+                        insertCommand.Parameters.AddWithValue("@department", newEmployee.Department.ToString());
                         insertCommand.Parameters.AddWithValue("@address", newEmployee.Address);
 
                         insertCommand.ExecuteNonQuery();
@@ -109,7 +110,7 @@ namespace ProjetoEmpresa.Models.Repositories
                         updateCommand.CommandText = "UPDATE employee SET employee_name = @employee_name, department = @department, address = @address WHERE id = @id";
                         
                         updateCommand.Parameters.AddWithValue("@employee_name", employeeToUpdate.EmployeeName);
-                        updateCommand.Parameters.AddWithValue("@department", employeeToUpdate.Department);
+                        updateCommand.Parameters.AddWithValue("@department", employeeToUpdate.Department.ToString());
                         updateCommand.Parameters.AddWithValue("@address", employeeToUpdate.Address);
                         updateCommand.Parameters.AddWithValue("@id", employeeToUpdate.Id);
 

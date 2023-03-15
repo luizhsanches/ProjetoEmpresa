@@ -8,7 +8,7 @@ namespace ProjetoEmpresa.ViewModels
 {
     public enum DepartmentList
     {
-        Todos = 0,
+        Todos,
         RH,
         Tecnologia,
         Financeiro,

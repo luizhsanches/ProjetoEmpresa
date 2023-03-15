@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjetoEmpresa.Views"
         xmlns:local1="clr-namespace:ProjetoEmpresa.Models"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" d:DataContext="{d:DesignInstance Type=local1:Employee}"
         mc:Ignorable="d"
         Title="EmployeeCreationEditView" Height="400" Width="450
         ">

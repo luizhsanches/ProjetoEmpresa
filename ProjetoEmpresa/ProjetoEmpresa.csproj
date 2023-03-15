@@ -106,6 +106,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\DepartmentEnum.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeValidator.cs" />
     <Compile Include="Models\Repositories\IDatabase.cs" />
     <Compile Include="Models\Repositories\PostgresDB.cs" />
     <Compile Include="ViewModels\VMUtils\RelayCommand.cs" />

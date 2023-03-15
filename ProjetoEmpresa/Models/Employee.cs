@@ -31,8 +31,8 @@ namespace ProjetoEmpresa.Models
             }
         }
 
-        private string _department;
-        public string Department
+        private DepartmentEnum _department;
+        public DepartmentEnum Department
         {
             get { return _department; }
             set
@@ -67,14 +67,14 @@ namespace ProjetoEmpresa.Models
             Address = address;
         }
 
-        public Employee(string employeeName, string department, string address)
+        public Employee(string employeeName, DepartmentEnum department, string address)
         {
             EmployeeName = employeeName;
             Department = department;
             Address = address;
         }
 
-        public Employee(int id, string employeeName, string department, string address)
+        public Employee(int id, string employeeName, DepartmentEnum department, string address)
         {
             Id = id;
             EmployeeName = employeeName;
