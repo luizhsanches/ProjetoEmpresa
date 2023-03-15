@@ -15,10 +15,18 @@ namespace ProjetoEmpresa.Models.Repositories
 {
     public class PostgresDB : IDatabase
     {
-        private readonly string connectionString = ConfigurationManager.ConnectionStrings["DbConnection"].ConnectionString;
+        private readonly string connectionString;
 
-        public PostgresDB()
+        public PostgresDB(bool isTestDb = false)
         {
+            if (isTestDb)
+            {
+                connectionString = "Server=localhost;Port=5432;Database=projeto_empresa_test;User Id=postgres;Password=1234;Integrated Security=true;";
+            }
+            else
+            {
+                connectionString = "Server=localhost;Port=5432;Database=projeto_empresa;User Id=postgres;Password=1234;Integrated Security=true;";
+            }
         }
 
         public ObservableCollection<Employee> GetEmployees()
